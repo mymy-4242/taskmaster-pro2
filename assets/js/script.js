@@ -15,7 +15,6 @@ var createTask = function(taskText, taskDate, taskList) {
 
   // append to ul list on the page
   $("#list-" + taskList).append(taskLi);
-
 };
 
 var loadTasks = function() {
@@ -107,7 +106,7 @@ $(".list-group").on("blur", "textarea", function() {
 
   //get the task's position in the list of other li elements
   var index = $(this)
-    .closest("list-group-item")
+    .closest(".list-group-item")
     .index();  
   
   //update task in array and re-save to localstorage
@@ -158,7 +157,7 @@ $(".list-group").on("blur", "input[type='text']", function() {
     
   //get the task's position in the list of other li elements
   var index = $(this)
-    .closest("list-group-item")
+    .closest(".list-group-item")
     .index();
     
   //update task in array and re-save to local storage
@@ -181,6 +180,10 @@ $("#remove-tasks").on("click", function() {
     $("#list-" + key).empty();
   }
   saveTasks();
+});
+
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group")
 });
 
 // load tasks for the first time
