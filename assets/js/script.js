@@ -99,7 +99,8 @@ $(".list-group").on("click", "p", function() {
 $(".list-group").on("blur", "textarea", function() {
   //get textarea's current value/text
   var text = $(this)
-    .val();
+    .val()
+    .trim();
 
   //get the parent ul's id attribute
   var status = $(this)
@@ -183,6 +184,9 @@ $(".list-group").on("change", "input[type='text']", function() {
 
   //replace input with span element
   $(this).replaceWith(taskSpan);  
+
+  //Pass task's <li> element into auditTask() to check new due date
+  auditTask($(taskSpan).closest(".list-group-item"));
 });
 
 // remove all tasks
@@ -264,9 +268,23 @@ $("#modalDueDate").datepicker({
 
 //audit Task
 var auditTask = function(taskEl) {
-  //to ensure element is getting to the function
-  console.log(taskEl);
-}
+  //get date from task element
+  var date = $(taskEl).find("span").text().trim();
+
+  //convert to moment object at 5pm
+  var time = moment(date, "L").set("hour", 17);
+ 
+  //remove any old classes from element
+  $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
+
+  //apply new classes if task is near/over due date
+  if (moment().isAfter(time)) {
+    $(taskEl).addClass("list-group-item-danger");
+  }
+  else if (Math.abs(moment().diff(time, "days")) <=2) {
+    $(taskEl).addClass("list-group-item-warning");
+  }
+};
 
 // load tasks for the first time
 loadTasks();
